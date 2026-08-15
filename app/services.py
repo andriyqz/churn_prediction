@@ -16,14 +16,13 @@ class ModelService:
     def load_model(self):
         if not self.model_path.exists():
             logger.critical(f"Model file not found: {self.model_path}")
-            FileNotFoundError(f"Model file not found: {self.model_path}")
+            raise FileNotFoundError(f"Model file not found: {self.model_path}")
 
         self.model = joblib.load(self.model_path)
 
     def predict(self, users_stats: list[UserStats]) -> float:
-        input_dict = [user_stats.model_dump(mode="json") for user_stats in users_stats]
-        input_df = pd.DataFrame(input_dict)
-        print(input_df)
+        input_batch = [user_stats.model_dump(mode="json") for user_stats in users_stats]
+        input_df = pd.DataFrame(input_batch)
         predictions = self.model.predict_proba(input_df)
 
         return [round(float(prediction[1]), 2) for prediction in predictions]

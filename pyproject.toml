@@ -6,13 +6,21 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.141.1",
+    "httpx2>=2.10.0",
     "ipykernel>=7.3.0",
     "joblib>=1.5.3",
     "matplotlib>=3.11.1",
     "numpy>=2.5.2",
     "pandas==3.0.5",
     "pandas-stubs~=3.0.5",
+    "pydantic-settings>=2.15.0",
     "python-dotenv>=1.2.2",
     "scikit-learn>=1.9.0",
     "xgboost>=3.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
 ]
