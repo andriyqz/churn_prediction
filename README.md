@@ -61,3 +61,7 @@ The `predict_churn_pipeline` DAG:
 | `airflow-webserver` | Airflow web UI                                     | 8080 |
 | `airflow-scheduler` | Airflow task scheduler                             | -    |
 | `airflow-init`      | Airflow DB initialization and user creation        | -    |
+
+## TODO:
+- Add DVC
+- Add streamlit interface
