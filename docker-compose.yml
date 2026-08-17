@@ -1,17 +1,83 @@
+version: '3.8'
+
+x-airflow-common:
+  &airflow-common
+  image: apache/airflow:2.8.1-python3.10
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_DB_USER:-airflow}:${AIRFLOW_DB_PASSWORD:-airflow}@airflow-postgres:5432/${AIRFLOW_DB_NAME:-airflow}
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY:-46827884680c173d16ca926712345678}
+    DATABASE_URL: ${DATABASE_URL}
+    PREDICT_API_URL: ${PREDICT_API_URL}
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./app:/opt/airflow/dags/app
+  depends_on:
+    - airflow-postgres
+    - churn-db
+
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: postgres_db
-    restart: always
+  airflow-postgres:
+    image: postgres:13
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "${POSTGRES_PORT}:5432"
+      POSTGRES_USER: ${AIRFLOW_DB_USER:-airflow}
+      POSTGRES_PASSWORD: ${AIRFLOW_DB_PASSWORD:-airflow}
+      POSTGRES_DB: ${AIRFLOW_DB_NAME:-airflow}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - airflow-db-volume:/var/lib/postgresql/data
+
+  churn-db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-customer_churn_db}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d customer_churn_db" ]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - churn-db-volume:/var/lib/postgresql/data
+
+  churn-api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      churn-db:
+        condition: service_healthy
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+
+  airflow-init:
+    <<: *airflow-common
+    command: version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${AIRFLOW_WWW_USER:-airflow}
+      _AIRFLOW_WWW_USER_PASSWORD: ${AIRFLOW_WWW_PASSWORD:-airflow}
 
 volumes:
-  postgres_data:
+  airflow-db-volume:
+  churn-db-volume:
