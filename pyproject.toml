@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "apache-airflow>=3.2.2",
     "faker>=40.36.0",
     "fastapi>=0.141.1",
     "httpx2>=2.10.0",
@@ -17,7 +18,9 @@ dependencies = [
     "psycopg2-binary>=2.9.12",
     "pydantic-settings>=2.15.0",
     "python-dotenv>=1.2.2",
+    "requests>=2.34.2",
     "scikit-learn>=1.9.0",
+    "waitress>=3.0.2",
     "xgboost>=3.4.0",
 ]
 
