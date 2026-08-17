@@ -1,5 +1,7 @@
 import logging
+
 from fastapi import APIRouter, HTTPException, status
+
 from app.schemas import UserStats, SinglePrediction, PredictionResponse
 from app.services import model_service
 

@@ -1,8 +1,10 @@
 import logging
+from pathlib import Path
+
 import joblib
 import pandas as pd
+
 from app.schemas import UserStats
-from pathlib import Path
 from app.settings import settings
 
 logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ class ModelService:
 
         self.model = joblib.load(self.model_path)
 
-    def predict(self, users_stats: list[UserStats]) -> float:
+    def predict(self, users_stats: list[UserStats]) -> list[float | int]:
         input_batch = [user_stats.model_dump(mode="json") for user_stats in users_stats]
         input_df = pd.DataFrame(input_batch)
         predictions = self.model.predict_proba(input_df)

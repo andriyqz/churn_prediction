@@ -1,15 +1,16 @@
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from app.services import model_service
+
 from app.routers.predict import router as predict_router
+from app.services import model_service
 from app.settings import settings
 
 logging.basicConfig(level=logging.INFO)
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app_: FastAPI):
     model_service.load_model()
     yield
 
