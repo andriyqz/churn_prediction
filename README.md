@@ -22,6 +22,7 @@ The risk level is derived from the churn probability `churn_prob`:
 - **Language / environment:** Python 3.13
 - **ML:** XGBoost, scikit-learn, joblib, matplotlib, pandas
 - **API:** FastAPI
+- **UI:** Streamlit
 - **Database:** PostgreSQL (psycopg2, SQLAlchemy)
 - **Orchestration:** Apache Airflow
 - **Infrastructure:** Docker, docker-compose
@@ -40,9 +41,10 @@ After startup:
 - **API (FastAPI):** http://localhost:8000
   - Swagger docs: http://localhost:8000/docs
   - Health check: http://localhost:8000/health
+- **UI (Streamlit):** http://localhost:8501
 - **Airflow Webserver:** http://localhost:8080 (default login/password `airflow` / `airflow`)
 
-The `churn-api` server creates the database, tables, and seeds them with synthetic data on startup via `entrypoint.sh` → `seed_postgres_db.py`.
+The `churn-api` server creates the database, tables, and seeds them with synthetic data on startup via `entrypoint.sh` → `seed_postgres_db.py`. It also starts the Streamlit interface (http://localhost:8501), where you can enter customer data and get a churn prediction from the API.
 
 After Airflow starts, trigger the `predict_churn_pipeline` DAG to run the first prediction. By default, the pipeline runs daily.
 
@@ -55,7 +57,7 @@ The `predict_churn_pipeline` DAG:
 
 | Service             | Purpose                                            | Port |
 |---------------------|----------------------------------------------------|------|
-| `churn-api`         | FastAPI prediction service                         | 8000 |
+| `churn-api`         | FastAPI prediction service + Streamlit UI  | 8000, 8501 |
 | `churn-db`          | PostgreSQL with customer data and predictions      | 5432 |
 | `airflow-postgres`  | PostgreSQL for Airflow metadata                    | -    |
 | `airflow-webserver` | Airflow web UI                                     | 8080 |
@@ -64,4 +66,3 @@ The `predict_churn_pipeline` DAG:
 
 ## TODO:
 - Add DVC
-- Add streamlit interface
