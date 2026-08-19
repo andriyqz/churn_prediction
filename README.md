@@ -19,14 +19,14 @@ The risk level is derived from the churn probability `churn_prob`:
 | `>= 0.50`       | `High`     |
 
 ## Tech stack
-- **Language / environment:** Python 3.13, `uv` (dependency manager)
-- **ML:** XGBoost, scikit-learn, joblib
+- **Language / environment:** Python 3.13
+- **ML:** XGBoost, scikit-learn, joblib, matplotlib, pandas
 - **API:** FastAPI
 - **Database:** PostgreSQL (psycopg2, SQLAlchemy)
 - **Orchestration:** Apache Airflow
 - **Infrastructure:** Docker, docker-compose
 - **Testing:** pytest, FastAPI TestClient
-- **Analysis / training:** matplotlib, pandas
+
 
 ## Quick start (Docker)
 Copy the environment configuration and start all services:
@@ -61,3 +61,7 @@ The `predict_churn_pipeline` DAG:
 | `airflow-webserver` | Airflow web UI                                     | 8080 |
 | `airflow-scheduler` | Airflow task scheduler                             | -    |
 | `airflow-init`      | Airflow DB initialization and user creation        | -    |
+
+## TODO:
+- Add DVC
+- Add streamlit interface
