@@ -14,8 +14,6 @@ from app.schemas import (
     UserStats,
 )
 
-print('START START START')
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -128,28 +126,74 @@ def init_db_and_tables():
             cur.execute("""
                         CREATE TABLE IF NOT EXISTS customer_stats
                         (
-                            customer_id VARCHAR(50) PRIMARY KEY,
-                            tenure NUMERIC(5, 1) NOT NULL,
-                            warehouse_to_home NUMERIC(5, 1) NOT NULL,
+                            customer_id
+                            VARCHAR
+                        (
+                            50
+                        ) PRIMARY KEY,
+                            tenure NUMERIC
+                        (
+                            5,
+                            1
+                        ) NOT NULL,
+                            warehouse_to_home NUMERIC
+                        (
+                            5,
+                            1
+                        ) NOT NULL,
                             number_of_device_registered INT NOT NULL,
-                            preferred_order_cat VARCHAR(50) NOT NULL,
-                            satisfaction_score INT CHECK (satisfaction_score BETWEEN 1 AND 5),
-                            marital_status VARCHAR(50) NOT NULL,
+                            preferred_order_cat VARCHAR
+                        (
+                            50
+                        ) NOT NULL,
+                            satisfaction_score INT CHECK
+                        (
+                            satisfaction_score
+                            BETWEEN
+                            1
+                            AND
+                            5
+                        ),
+                            marital_status VARCHAR
+                        (
+                            50
+                        ) NOT NULL,
                             number_of_address INT NOT NULL,
-                            complain SMALLINT CHECK (complain IN (0, 1)),
+                            complain SMALLINT CHECK
+                        (
+                            complain
+                            IN
+                        (
+                            0,
+                            1
+                        )),
                             day_since_last_order INT NOT NULL,
-                            cashback_amount NUMERIC(7, 2) NOT NULL,
+                            cashback_amount NUMERIC
+                        (
+                            7,
+                            2
+                        ) NOT NULL,
                             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-                        );
+                                                     );
 
                         CREATE TABLE IF NOT EXISTS customer_churn_predictions
                         (
-                            id SERIAL PRIMARY KEY,
-                            customer_id VARCHAR(50) NOT NULL,
-                            risk_level VARCHAR(50) NOT NULL,
+                            id
+                            SERIAL
+                            PRIMARY
+                            KEY,
+                            customer_id
+                            VARCHAR
+                        (
+                            50
+                        ) NOT NULL,
+                            risk_level VARCHAR
+                        (
+                            50
+                        ) NOT NULL,
                             churn_prob FLOAT,
                             predicted_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-                        );
+                                                       );
                         """)
             conn.commit()
         conn.close()

@@ -49,6 +49,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+      - "8501:8501"
     depends_on:
       churn-db:
         condition: service_healthy

@@ -20,11 +20,11 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-EXPOSE 8000
+EXPOSE 8000 8501
 
 COPY entrypoint.sh /entrypoint.sh
 
-# create mock database and start api
+# create mock database and start api with streamlit interface
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
