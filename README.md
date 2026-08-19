@@ -2,6 +2,9 @@
 
 A customer churn prediction system for an e-commerce platform. This is an end-to-end MLOps pipeline: a trained XGBoost model is wrapped in a FastAPI service, customer data is stored in PostgreSQL, and the daily prediction pipeline is automated with Apache Airflow.
 
+<img width="1843" height="783" alt="image" src="https://github.com/user-attachments/assets/eefa83b4-154c-46e8-bc88-128c51b06000" />
+
+
 ## How it works
 1. **The model** is trained in a Jupyter notebook (`notebooks/main.ipynb`) on `datasets/data_ecommerce_customer_churn.csv` and saved to `models/model.joblib`.
 2. **The FastAPI service** loads the model on startup and accepts customer data at the `POST /predict_batch` endpoint, returning the churn probability and risk level for each customer.
